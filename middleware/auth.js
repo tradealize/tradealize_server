@@ -1,5 +1,5 @@
 const admin = require("firebase-admin");
-const { customer } = require("../models");
+const { user } = require("../models");
 
 const fbAuth = async (req, res, next) => {
   try {
@@ -9,7 +9,7 @@ const fbAuth = async (req, res, next) => {
       if (decodedToken) {
         req.uid = decodedToken.uid;
       }
-      const current_customer = await customer.findOne({
+      const current_customer = await user.findOne({
         where: {
           uid: decodedToken.uid,
         },

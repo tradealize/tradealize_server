@@ -1,10 +1,11 @@
 {
   "development": {
     "username": "root",
-    "password": null,
-    "database": "database_development",
+    "password": "#jmalvarezs2020",
+    "database": "lablablab",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "logging": false
   },
   "test": {
     "username": "root",
