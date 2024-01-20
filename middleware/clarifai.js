@@ -1,17 +1,18 @@
 const { ClarifaiStub, grpc } = require("clarifai-nodejs-grpc");
 
-const USER_ID = "openai";
-const APP_ID = "chat-completion";
-const MODEL_ID = "openai-gpt-4-vision";
-
+const API_KEY = process.env.CLARIFAI_API_KEY;
 const stub = ClarifaiStub.grpc();
 
 const metadata = new grpc.Metadata();
 
-metadata.set("authorization", "Key 8095f75eeca04f8db4e223066fc461f0");
+metadata.set("authorization", `Key ${API_KEY}`);
 
 const getImageCompletion = async (prompt, image_url) =>
   new Promise((resolve, reject) => {
+    const USER_ID = "openai";
+    const APP_ID = "chat-completion";
+    const MODEL_ID = "openai-gpt-4-vision";
+
     stub.PostModelOutputs(
       {
         // This is the model ID of a publicly available General model. You may use any other public or custom model ID.

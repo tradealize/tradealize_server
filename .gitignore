@@ -2,3 +2,4 @@ node_modules
 migrations
 dev.env
 package-lock.json
+ecosystem.config.js
