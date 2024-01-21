@@ -1,17 +1,84 @@
 const { ClarifaiStub, grpc } = require("clarifai-nodejs-grpc");
 
-const API_KEY = process.env.CLARIFAI_API_KEY;
+const API_KEY = "8095f75eeca04f8db4e223066fc461f0";
 const stub = ClarifaiStub.grpc();
 
 const metadata = new grpc.Metadata();
 
-metadata.set("authorization", `Key ${API_KEY}`);
+const predictWorkflowTTA = async (PROMPT) =>
+  new Promise((resolve, reject) => {
+    const APP_ID = "Traderalize";
+    const USER_ID = "chekosworld";
+    const WORKFLOW_ID = "worfklow-tta-tti";
+    const PAT = "8095f75eeca04f8db4e223066fc461f0";
 
+    metadata.set("authorization", "Key " + PAT);
+
+    stub.PostWorkflowResults(
+      {
+        user_app_id: {
+          user_id: USER_ID,
+          app_id: APP_ID,
+        },
+        workflow_id: WORKFLOW_ID,
+        inputs: [{ data: { text: { raw: PROMPT } } }],
+      },
+      metadata,
+      (err, response) => {
+        if (err) {
+          return reject(err);
+        }
+
+        if (response.status.code !== 10000) {
+          return reject(response.status);
+        }
+
+        resolve(response);
+      }
+    );
+  });
+
+const predictWorkflowImage = async (PROMPT, IMAGE_URL) =>
+  new Promise((resolve, reject) => {
+    const APP_ID = "Traderalize";
+    const USER_ID = "chekosworld";
+    const WORKFLOW_ID = "workflow-663344";
+    const PAT = "8095f75eeca04f8db4e223066fc461f0";
+
+    metadata.set("authorization", "Key " + PAT);
+
+    stub.PostWorkflowResults(
+      {
+        user_app_id: {
+          user_id: USER_ID,
+          app_id: APP_ID,
+        },
+        workflow_id: WORKFLOW_ID,
+        inputs: [
+          { data: { image: { url: IMAGE_URL } }, text: { raw: PROMPT } },
+        ],
+      },
+      metadata,
+      (err, response) => {
+        if (err) {
+          return reject(err);
+        }
+
+        if (response.status.code !== 10000) {
+          return reject(response.status);
+        }
+
+        resolve(response);
+      }
+    );
+  });
 const getImageCompletion = async (prompt, image_url) =>
   new Promise((resolve, reject) => {
     const USER_ID = "openai";
     const APP_ID = "chat-completion";
     const MODEL_ID = "openai-gpt-4-vision";
+
+    metadata.set("authorization", `Key ${API_KEY}`);
 
     stub.PostModelOutputs(
       {
@@ -56,4 +123,8 @@ const getImageCompletion = async (prompt, image_url) =>
     );
   });
 
-module.exports = { getImageCompletion };
+module.exports = {
+  predictWorkflowTTA,
+  getImageCompletion,
+  predictWorkflowImage,
+};

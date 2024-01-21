@@ -28,7 +28,6 @@
     "firebase-admin": "^9.9.0",
     "fs": "^0.0.1-security",
     "http": "^0.0.1-security",
-    "i": "^0.3.7",
     "jwt-simple": "^0.5.6",
     "moment": "^2.29.4",
     "multer": "^1.4.4",
