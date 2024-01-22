@@ -80,7 +80,7 @@ const getImageCompletion = async (prompt, image_url) =>
 
     metadata.set("authorization", `Key ${API_KEY}`);
 
-    stub.PostModelOutputs(
+    return stub.PostModelOutputs(
       {
         // This is the model ID of a publicly available General model. You may use any other public or custom model ID.
         model_id: MODEL_ID,

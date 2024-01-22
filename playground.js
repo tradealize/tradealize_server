@@ -1,7 +1,8 @@
 const {
-  getImageCompletion,
-  predictWorkflowTTA,
-} = require("./middleware/clarifai");
+  uploadAudioOutput,
+  uploadImageOutput,
+} = require("./functions/clarifai");
+const { predictWorkflowTTA } = require("./middleware/clarifai");
 const fs = require("fs");
 
 const prompt =
@@ -30,32 +31,11 @@ async function main() {
       console.log(content);*/
 
   predictWorkflowTTA(content)
-    .then((result) => {
+    .then(async (result) => {
       console.log("Finished Workflow");
       const { outputs } = result.results[0];
-
-      const dalleOutput = outputs.find(
-        ({ model }) => model.name === "dall-e-3"
-      );
-
-      if (dalleOutput && dalleOutput !== null) {
-        const { image } = dalleOutput.data;
-        const { base64 } = image;
-        fs.writeFileSync(`${__dirname}/image.png`, base64, {
-          encoding: "base64",
-        });
-      }
-
-      const ttsOutput = outputs.find(
-        ({ model }) => model.name === "openai-tts-1"
-      );
-
-      if (ttsOutput && ttsOutput !== null) {
-        const { audio } = ttsOutput.data;
-        const { audio_format } = audio.audio_info;
-        const { base64 } = audio;
-        fs.writeFileSync(`${__dirname}/audio.${audio_format}`, base64);
-      }
+      await uploadImageOutput(outputs);
+      await uploadAudioOutput(outputs);
     })
     .catch((error) => {
       console.log("Error on TTA");

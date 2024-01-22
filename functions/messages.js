@@ -2,6 +2,7 @@ const { getChatResult } = require("./openai");
 const { sendEventRoom } = require("../middleware/socket");
 const { createMessageFromData } = require("../actions/messages");
 const { getImageCompletion } = require("../middleware/clarifai");
+const { runProjectWorkflow } = require("./clarifai");
 
 const formatMessages = (messages) => {
   return messages.map(({ role, content }) => ({ role, content })).slice(-2);
@@ -13,11 +14,10 @@ const handleChatOutput = async (conversation, prompt, messages, metadata) => {
   try {
     let chatCompletion;
     if (metadata.model === "gpt-4-vision") {
-      chatCompletion = await getImageCompletion(
-        prompt,
-        metadata.image_url,
-        metadata
-      );
+      return runProjectWorkflow(prompt, metadata.image_url, {
+        conversation_id,
+        user_id,
+      });
     } else {
       chatCompletion = await getChatResult(prompt, messages, metadata);
     }

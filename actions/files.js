@@ -10,5 +10,10 @@ const findFileById = async (file_id) => {
   current_file = current_file.toJSON();
   return current_file;
 };
+const createFileFromData = async (data) => {
+  delete data.file_id;
+  const current_file = await file.create(data);
+  return current_file.toJSON();
+};
 
-module.exports = { findFileById };
+module.exports = { findFileById, createFileFromData };

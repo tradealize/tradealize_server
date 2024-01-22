@@ -3,11 +3,9 @@ const app = express();
 const port = process.env.PORT;
 const cors = require("cors");
 const moment = require("moment");
-const Sentry = require("@sentry/node");
 const applyRoutes = require("./routes");
 const admin = require("firebase-admin");
 const bodyParser = require("body-parser");
-const Tracing = require("@sentry/tracing");
 const http = require("http").createServer(app);
 const serviceAccount = require("./serviceAccount.json");
 const { createSocket } = require("./middleware/socket");
@@ -56,37 +54,11 @@ applyRoutes("/api", app);
 
 createSocket(http);
 
-if (process.env.NODE_ENV !== "development") {
-  app.use(express.static(`${__dirname}/build`));
+app.use(express.static(`${__dirname}/build`));
 
-  Sentry.init({
-    dsn: process.env.SENTRY_DSN,
-    integrations: [
-      // enable HTTP calls tracing
-      new Sentry.Integrations.Http({ tracing: true }),
-      // enable Express.js middleware tracing
-      new Tracing.Integrations.Express({ app }),
-    ],
-
-    // Set tracesSampleRate to 1.0 to capture 100%
-    // of transactions for performance monitoring.
-    // We recommend adjusting this value in production
-    tracesSampleRate: 1.0,
-  });
-
-  // transaction/span/breadcrumb is attached to its own Hub instance
-  app.use(Sentry.Handlers.requestHandler());
-
-  // TracingHandler creates a trace for every incoming request
-  app.use(Sentry.Handlers.tracingHandler());
-
-  // The error handler must be before any other error middleware and after all controllers
-  app.use(Sentry.Handlers.errorHandler());
-
-  app.get("/*", (req, res) => {
-    res.sendFile(`${__dirname}/build/index.html`);
-  });
-}
+app.get("/*", (req, res) => {
+  res.sendFile(`${__dirname}/build/index.html`);
+});
 
 // Optional fallthrough error handler
 app.use(function onError(error, req, res, next) {
@@ -106,9 +78,6 @@ app.use(function onError(error, req, res, next) {
   res.statusCode = 500;
   console.log(moment().utc().format("YYYY-MM-DD HH:mm:ss"));
   console.log(error);
-  if (process.env.NODE_ENV !== "development") {
-    return res.end(res.sentry + "\n");
-  }
   res.status(500).send(error);
 });
 
