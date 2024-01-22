@@ -86,6 +86,8 @@ const uploadImageOutput = async (outputs) => {
 
       await uploadFileFromDisk(filePath, `${fileName}.${fileType}`);
 
+      fs.unlinkSync(filePath);
+
       return file;
     }
   }
@@ -114,6 +116,8 @@ const uploadAudioOutput = async (outputs) => {
       });
 
       await uploadFileFromDisk(filePath, `${fileName}.${fileType}`);
+
+      fs.unlinkSync(filePath);
 
       return file;
     }
