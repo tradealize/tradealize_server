@@ -31,7 +31,7 @@ const findMessagesByParams = async (params, limit, offset) => {
 const createMessageFromData = async (data) => {
   delete data.message_id;
   const current = await message.create(data);
-  return current.toJSON();
+  return findMessageById(current.message_id);
 };
 
 const updateMessageFromData = async (data) => {

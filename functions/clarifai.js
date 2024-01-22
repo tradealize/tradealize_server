@@ -21,7 +21,7 @@ const runProjectWorkflow = async (prompt, image_url, metadata) => {
     const { choices } = chatCompletion;
     const { content } = choices[0].message;
 
-    console.log(content);
+    //console.log(content);
 
     createMessageFromData({
       content,
@@ -110,7 +110,7 @@ const uploadAudioOutput = async (outputs) => {
 
       const file = await createFileFromData({
         name: fileName,
-        type: "png",
+        type: fileType,
       });
 
       await uploadFileFromDisk(filePath, `${fileName}.${fileType}`);

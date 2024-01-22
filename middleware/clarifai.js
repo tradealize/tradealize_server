@@ -1,6 +1,6 @@
 const { ClarifaiStub, grpc } = require("clarifai-nodejs-grpc");
 
-const API_KEY = "8095f75eeca04f8db4e223066fc461f0";
+const API_KEY = process.env.CLARIFAI_API_KEY;
 const stub = ClarifaiStub.grpc();
 
 const metadata = new grpc.Metadata();
@@ -10,7 +10,7 @@ const predictWorkflowTTA = async (PROMPT) =>
     const APP_ID = "Traderalize";
     const USER_ID = "chekosworld";
     const WORKFLOW_ID = "worfklow-tta-tti";
-    const PAT = "8095f75eeca04f8db4e223066fc461f0";
+    const PAT = process.env.CLARIFAI_PAT;
 
     metadata.set("authorization", "Key " + PAT);
 
@@ -43,7 +43,7 @@ const predictWorkflowImage = async (PROMPT, IMAGE_URL) =>
     const APP_ID = "Traderalize";
     const USER_ID = "chekosworld";
     const WORKFLOW_ID = "workflow-663344";
-    const PAT = "8095f75eeca04f8db4e223066fc461f0";
+    const PAT = process.env.CLARIFAI_PAT;
 
     metadata.set("authorization", "Key " + PAT);
 
